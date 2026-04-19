@@ -1,0 +1,79 @@
+{% extends "shared/base.html" %}
+{% block title %}View Attendance Records{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>🔍 Attendance Records</h2>
+</div>
+
+<!-- ── Filter form ─────────────────────────────────────────────────── -->
+<form method="GET" action="{{ url_for('lecturer.view_records') }}" class="filter-form">
+  <div class="form-row">
+    <div class="form-group">
+      <label>Class</label>
+      <select name="class_id">
+        <option value="">All classes</option>
+        {% for cls in classes %}
+          <option value="{{ cls.id }}" {% if selected_class == cls.id %}selected{% endif %}>
+            {{ cls.code }} – {{ cls.course_name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Student</label>
+      <select name="student_id">
+        <option value="">All students</option>
+        {% for stu in students %}
+          <option value="{{ stu.id }}" {% if selected_student == stu.id %}selected{% endif %}>
+            {{ stu.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select name="status">
+        <option value="">All</option>
+        <option value="present" {% if selected_status == 'present' %}selected{% endif %}>Present</option>
+        <option value="absent"  {% if selected_status == 'absent'  %}selected{% endif %}>Absent</option>
+      </select>
+    </div>
+    <div class="form-group form-group-btn">
+      <button type="submit" class="btn btn-primary">Filter</button>
+      <a href="{{ url_for('lecturer.view_records') }}" class="btn btn-secondary">Reset</a>
+    </div>
+  </div>
+</form>
+
+<!-- ── Results ─────────────────────────────────────────────────────── -->
+<p>{{ records|length }} record(s) found.</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Student</th>
+      <th>Student No.</th>
+      <th>Class</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in records %}
+    <tr>
+      <td>{{ r.date }}</td>
+      <td>{{ r.student.name }}</td>
+      <td><code>{{ r.student.user.username }}</code></td>
+      <td>{{ r.class_obj.code }}</td>
+      <td>
+        <span class="badge badge-{{ 'success' if r.status == 'present' else 'danger' }}">
+          {{ r.status|capitalize }}
+        </span>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5" class="text-center">No records match the selected filters.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

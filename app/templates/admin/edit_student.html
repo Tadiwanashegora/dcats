@@ -1,0 +1,53 @@
+{% extends "shared/base.html" %}
+{% block title %}Edit Student{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>✏️ Edit Student — {{ stu.name }}</h2>
+  <p>Update the student's details below.</p>
+  <a href="{{ url_for('admin.index') }}" class="btn btn-secondary btn-sm">← Back to Manage</a>
+</div>
+
+<div class="form-card">
+  <form method="POST" action="{{ url_for('admin.edit_student', student_id=stu.id) }}">
+
+    <div class="form-group" style="max-width:340px;">
+      <label>Student Number</label>
+      <input type="text" value="{{ stu.user.username }}" disabled />
+      <small>Student number cannot be changed.</small>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">Full Name *</label>
+        <input type="text" id="name" name="name"
+               value="{{ stu.name }}" required />
+      </div>
+      <div class="form-group">
+        <label for="email">Email Address *</label>
+        <input type="email" id="email" name="email"
+               value="{{ stu.email }}" required />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="course">Course / Programme *</label>
+        <input type="text" id="course" name="course"
+               value="{{ stu.course }}" required />
+      </div>
+      <div class="form-group">
+        <label for="password">New Password</label>
+        <input type="password" id="password" name="password"
+               placeholder="Leave blank to keep current password" />
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+      <a href="{{ url_for('admin.index') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+
+  </form>
+</div>
+{% endblock %}

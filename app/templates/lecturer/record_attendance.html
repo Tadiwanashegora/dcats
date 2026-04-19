@@ -1,0 +1,66 @@
+{% extends "shared/base.html" %}
+{% block title %}Record Attendance{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>📋 Record Attendance</h2>
+  <p>Select a class and date, then mark each student.</p>
+</div>
+
+<form method="POST" action="{{ url_for('lecturer.record_attendance') }}">
+  <!-- ── Session selector ──────────────────────────────────────────── -->
+  <div class="form-row">
+    <div class="form-group">
+      <label for="class_id">Class</label>
+      <select id="class_id" name="class_id" required>
+        <option value="">-- Select class --</option>
+        {% for cls in classes %}
+          <option value="{{ cls.id }}">{{ cls.code }} – {{ cls.course_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="session_date">Session Date</label>
+      <input type="date" id="session_date" name="session_date"
+             value="{{ today }}" max="{{ today }}" required />
+    </div>
+  </div>
+
+  <!-- ── Student list ──────────────────────────────────────────────── -->
+  <h3>Students</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Student Number</th>
+        <th>Name</th>
+        <th>Course</th>
+        <th>Present</th>
+        <th>Absent</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for stu in students %}
+      <tr>
+        <td><code>{{ stu.user.username }}</code></td>
+        <td>{{ stu.name }}</td>
+        <td>{{ stu.course }}</td>
+        <td>
+          <input type="radio" name="status_{{ stu.id }}"
+                 value="present" checked />
+        </td>
+        <td>
+          <input type="radio" name="status_{{ stu.id }}"
+                 value="absent" />
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Save Attendance</button>
+    <a href="{{ url_for('lecturer.dashboard') }}" class="btn btn-secondary">Cancel</a>
+  </div>
+</form>
+{% endblock %}
+

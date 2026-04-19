@@ -1,0 +1,65 @@
+{% extends "shared/base.html" %}
+{% block title %}My Attendance{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Hello, {{ stu.name }} 👋</h2>
+  <p>Student No: <code>{{ stu.user.username }}</code> &nbsp;|&nbsp; Course: {{ stu.course }}</p>
+</div>
+
+<!-- ── Overall rate ────────────────────────────────────────────────── -->
+<div class="stats-grid">
+  <div class="stat-card {% if overall_rate < 80 %}stat-danger{% endif %}">
+    <span class="stat-value">{{ overall_rate }}%</span>
+    <span class="stat-label">Overall Attendance</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-value">{{ summary|length }}</span>
+    <span class="stat-label">Enrolled Classes</span>
+  </div>
+  <div class="stat-card {% if summary|selectattr('at_risk')|list|length > 0 %}stat-danger{% endif %}">
+    <span class="stat-value">{{ summary|selectattr('at_risk')|list|length }}</span>
+    <span class="stat-label">Classes At Risk (&lt;80%)</span>
+  </div>
+</div>
+
+{% if overall_rate < 80 %}
+<div class="alert alert-danger">
+  ⚠ Your overall attendance is below 80%. You may be at risk of failing attendance requirements.
+  Please contact your lecturer immediately.
+</div>
+{% endif %}
+
+<!-- ── Per-class summary ───────────────────────────────────────────── -->
+{% for row in summary %}
+<div class="class-card {% if row.at_risk %}class-card-danger{% endif %}">
+  <div class="class-card-header">
+    <div>
+      <span class="class-code">{{ row.class.code }}</span>
+      <span class="class-name">{{ row.class.course_name }}</span>
+    </div>
+    <span class="attendance-rate {% if row.at_risk %}text-danger{% endif %}">
+      {{ row.rate }}%
+    </span>
+  </div>
+
+  <div class="class-card-stats">
+    <span>✅ Present: {{ row.present }}</span>
+    <span>❌ Absent: {{ row.absent }}</span>
+    <span>📅 Total: {{ row.total }}</span>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill {% if row.at_risk %}fill-danger{% endif %}"
+         style="width:{{ row.rate }}%"></div>
+  </div>
+
+  {% if row.at_risk %}
+    <p class="at-risk-warning">⚠ Attendance below 80% – you are at risk!</p>
+  {% endif %}
+
+  <a href="{{ url_for('student.view_attendance', class_id=row.class.id) }}"
+     class="btn btn-sm btn-secondary">View All Sessions</a>
+</div>
+{% endfor %}
+{% endblock %}

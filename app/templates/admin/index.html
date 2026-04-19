@@ -1,0 +1,132 @@
+{% extends "shared/base.html" %}
+{% block title %}Manage System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>⚙️ System Management</h2>
+  <p>Add or remove students, lecturers, and courses.</p>
+</div>
+
+<!-- ── Quick Add Buttons ─────────────────────────────────────────────────── -->
+<div class="action-cards" style="margin-bottom:2rem;">
+  <a href="{{ url_for('admin.add_student') }}"  class="action-card">
+    <span class="action-icon">🎓</span><span>Add Student</span>
+  </a>
+  <a href="{{ url_for('admin.add_lecturer') }}" class="action-card">
+    <span class="action-icon">👨‍🏫</span><span>Add Lecturer</span>
+  </a>
+  <a href="{{ url_for('admin.add_course') }}"   class="action-card">
+    <span class="action-icon">📚</span><span>Add Course</span>
+  </a>
+</div>
+
+<!-- ── Students ──────────────────────────────────────────────────────────── -->
+<div class="section-card">
+  <div class="section-header">
+    <h3>🎓 Students <span class="count-badge">{{ students|length }}</span></h3>
+    <a href="{{ url_for('admin.add_student') }}" class="btn btn-primary btn-sm">+ Add Student</a>
+  </div>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Student No.</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Course</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for stu in students %}
+      <tr>
+        <td><code>{{ stu.user.username }}</code></td>
+        <td>{{ stu.name }}</td>
+        <td>{{ stu.email }}</td>
+        <td><span class="badge badge-info">{{ stu.course }}</span></td>
+        <td>
+          <a href="{{ url_for('admin.edit_student', student_id=stu.id) }}"
+             class="btn btn-sm btn-secondary">✏️ Edit</a>
+          <form method="POST"
+                action="{{ url_for('admin.delete_student', student_id=stu.id) }}"
+                style="display:inline;"
+                onsubmit="return confirm('Delete {{ stu.name }}? This also removes their attendance records.')">
+            <button type="submit" class="btn btn-sm btn-danger">🗑️ Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-center">No students found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ── Lecturers ─────────────────────────────────────────────────────────── -->
+<div class="section-card">
+  <div class="section-header">
+    <h3>👨‍🏫 Lecturers <span class="count-badge">{{ lecturers|length }}</span></h3>
+    <a href="{{ url_for('admin.add_lecturer') }}" class="btn btn-primary btn-sm">+ Add Lecturer</a>
+  </div>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Classes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for lec in lecturers %}
+      <tr>
+        <td><code>{{ lec.user.username }}</code></td>
+        <td>{{ lec.name }}</td>
+        <td>{{ lec.email }}</td>
+        <td>{{ lec.total_classes() }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="text-center">No lecturers found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ── Courses ───────────────────────────────────────────────────────────── -->
+<div class="section-card">
+  <div class="section-header">
+    <h3>📚 Courses <span class="count-badge">{{ courses|length }}</span></h3>
+    <a href="{{ url_for('admin.add_course') }}" class="btn btn-primary btn-sm">+ Add Course</a>
+  </div>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Course Name</th>
+        <th>Lecturer</th>
+        <th>Sessions</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cls in courses %}
+      <tr>
+        <td><code>{{ cls.code }}</code></td>
+        <td>{{ cls.course_name }}</td>
+        <td>{{ cls.lecturer.name }}</td>
+        <td>{{ cls.total_sessions() }}</td>
+        <td>
+          <form method="POST"
+                action="{{ url_for('admin.delete_course', class_id=cls.id) }}"
+                style="display:inline;"
+                onsubmit="return confirm('Delete {{ cls.course_name }}? This also removes all attendance records for it.')">
+            <button type="submit" class="btn btn-sm btn-danger">🗑️ Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-center">No courses found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

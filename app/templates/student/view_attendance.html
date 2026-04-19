@@ -1,0 +1,65 @@
+{% extends "shared/base.html" %}
+{% block title %}{{ cls.code }} Attendance{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>{{ cls.code }} – {{ cls.course_name }}</h2>
+  <p>Your attendance record for this class.</p>
+  <a href="{{ url_for('student.dashboard') }}" class="btn btn-secondary btn-sm">← Back</a>
+</div>
+
+<!-- ── Summary stats ───────────────────────────────────────────────── -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <span class="stat-value">{{ total }}</span>
+    <span class="stat-label">Total Sessions</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-value">{{ present }}</span>
+    <span class="stat-label">Present</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-value">{{ absent }}</span>
+    <span class="stat-label">Absent</span>
+  </div>
+  <div class="stat-card {% if at_risk %}stat-danger{% endif %}">
+    <span class="stat-value">{{ rate }}%</span>
+    <span class="stat-label">Attendance Rate</span>
+  </div>
+</div>
+
+{% if at_risk %}
+<div class="alert alert-danger">
+  ⚠ Your attendance in this class is below 80%. Please contact your lecturer.
+</div>
+{% endif %}
+
+<!-- ── Session log ─────────────────────────────────────────────────── -->
+<h3>Session Log</h3>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Date</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in records %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ r.date.strftime('%d %b %Y') }}</td>
+      <td>
+        <span class="badge badge-{{ 'success' if r.status == 'present' else 'danger' }}">
+          {{ r.status|capitalize }}
+        </span>
+      </td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="3" class="text-center">No sessions recorded yet.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

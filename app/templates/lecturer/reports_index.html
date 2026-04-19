@@ -1,0 +1,26 @@
+{% extends "shared/base.html" %}
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>📊 Attendance Reports</h2>
+  <p>Select a class to generate a full attendance summary report.</p>
+</div>
+
+<div class="card-grid">
+  {% for cls in classes %}
+  <div class="report-card">
+    <div class="report-card-header">
+      <span class="class-code">{{ cls.code }}</span>
+      <span class="class-avg">{{ cls.average_attendance() }}% avg</span>
+    </div>
+    <h4>{{ cls.course_name }}</h4>
+    <p>{{ cls.total_sessions() }} session(s) recorded</p>
+    <a href="{{ url_for('reports.class_report', class_id=cls.id) }}"
+       class="btn btn-primary btn-full">Generate Report</a>
+  </div>
+  {% else %}
+  <p>No classes found.</p>
+  {% endfor %}
+</div>
+{% endblock %}

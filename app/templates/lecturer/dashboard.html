@@ -1,0 +1,75 @@
+{% extends "shared/base.html" %}
+{% block title %}Lecturer Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Welcome, {{ lec.name }}</h2>
+  <p>Manage attendance for your classes below.</p>
+</div>
+
+<!-- ── Stats bar ──────────────────────────────────────────────────── -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <span class="stat-value">{{ stats.total_classes }}</span>
+    <span class="stat-label">Classes</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-value">{{ stats.total_sessions }}</span>
+    <span class="stat-label">Sessions Recorded</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-value">{{ stats.avg_attendance }}%</span>
+    <span class="stat-label">Avg Attendance</span>
+  </div>
+  <div class="stat-card {% if stats.at_risk_count > 0 %}stat-danger{% endif %}">
+    <span class="stat-value">{{ stats.at_risk_count }}</span>
+    <span class="stat-label">At-Risk Students</span>
+  </div>
+</div>
+
+<!-- ── Quick actions ──────────────────────────────────────────────── -->
+<div class="action-cards">
+  <a href="{{ url_for('lecturer.record_attendance') }}" class="action-card">
+    <span class="action-icon">📋</span>
+    <span>Record Attendance</span>
+  </a>
+  <a href="{{ url_for('lecturer.view_records') }}" class="action-card">
+    <span class="action-icon">🔍</span>
+    <span>View Records</span>
+  </a>
+  <a href="{{ url_for('reports.index') }}" class="action-card">
+    <span class="action-icon">📊</span>
+    <span>Generate Report</span>
+  </a>
+</div>
+
+<!-- ── Class list ─────────────────────────────────────────────────── -->
+<h3>Your Classes</h3>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Course Name</th>
+      <th>Sessions</th>
+      <th>Avg Attendance</th>
+      <th>Report</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for cls in classes %}
+    <tr>
+      <td><code>{{ cls.code }}</code></td>
+      <td>{{ cls.course_name }}</td>
+      <td>{{ cls.total_sessions() }}</td>
+      <td>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:{{ cls.average_attendance() }}%"></div>
+          <span>{{ cls.average_attendance() }}%</span>
+        </div>
+      </td>
+      <td><a href="{{ url_for('reports.class_report', class_id=cls.id) }}" class="btn btn-sm">View</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

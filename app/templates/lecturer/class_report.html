@@ -1,0 +1,72 @@
+{% extends "shared/base.html" %}
+{% block title %}Report – {{ cls.code }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>📊 {{ cls.code }} – {{ cls.course_name }}</h2>
+  <p>{{ sessions }} session(s) recorded &nbsp;|&nbsp; Class average: <strong>{{ avg }}%</strong></p>
+  <a href="{{ url_for('reports.index') }}" class="btn btn-secondary btn-sm">← Back to Reports</a>
+</div>
+
+<!-- ── Summary table ───────────────────────────────────────────────── -->
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Student No.</th>
+      <th>Name</th>
+      <th>Present</th>
+      <th>Absent</th>
+      <th>Rate</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr class="{% if row.at_risk %}row-danger{% endif %}">
+      <td><code>{{ row.student.user.username }}</code></td>
+      <td>{{ row.student.name }}</td>
+      <td>{{ row.present }}</td>
+      <td>{{ row.absent }}</td>
+      <td>
+        <div class="progress-bar">
+          <div class="progress-fill {% if row.at_risk %}fill-danger{% endif %}"
+               style="width:{{ row.rate }}%"></div>
+          <span>{{ row.rate }}%</span>
+        </div>
+      </td>
+      <td>
+        {% if row.at_risk %}
+          <span class="badge badge-danger">⚠ At Risk</span>
+        {% else %}
+          <span class="badge badge-success">✓ OK</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- ── Per-student session breakdown ─────────────────────────────── -->
+{% for row in rows %}
+<details class="session-details">
+  <summary>{{ row.student.name }} – session-by-session breakdown</summary>
+  <table class="data-table data-table-sm">
+    <thead>
+      <tr><th>Date</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      {% for r in row.records %}
+      <tr>
+        <td>{{ r.date }}</td>
+        <td>
+          <span class="badge badge-{{ 'success' if r.status == 'present' else 'danger' }}">
+            {{ r.status|capitalize }}
+          </span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</details>
+{% endfor %}
+{% endblock %}
