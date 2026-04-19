@@ -18,7 +18,7 @@ This project was developed as part of the **Software Processes (SPS611S)** cours
 
 ---
 
-## 🎯 Problem Statement
+##  Problem Statement
 Traditional attendance methods (paper registers and roll calls) are:
 - Time-consuming  
 - Prone to errors  
