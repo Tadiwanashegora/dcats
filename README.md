@@ -7,8 +7,6 @@ The system helps lecturers record student attendance digitally and allows studen
 
 This project was developed as part of the **Software Processes (SPS611S)** course.
 
----
-
 ##  Group Members
 - Philipus Nefuma (223010006)  
 - Esther Gabriel (222101717)  
@@ -16,7 +14,6 @@ This project was developed as part of the **Software Processes (SPS611S)** cours
 - Kelvin Gora (221026916)  
 - Markus NFT (214021254)  
 
----
 
 ##  Problem Statement
 Traditional attendance methods (paper registers and roll calls) are:
@@ -26,7 +23,6 @@ Traditional attendance methods (paper registers and roll calls) are:
 
 DCATS solves this by providing a **digital, reliable, and efficient attendance system**.
 
----
 
 ##  Objectives
 - Develop a digital attendance tracking system  
@@ -35,7 +31,6 @@ DCATS solves this by providing a **digital, reliable, and efficient attendance s
 - Enable students to view attendance records  
 - Generate attendance reports  
 
----
 
 ##  Features
 - Lecturer and student login system  
@@ -45,7 +40,6 @@ DCATS solves this by providing a **digital, reliable, and efficient attendance s
 - Search student attendance history  
 - Admin management (students, lecturers, courses)  
 
----
 
 ## System Architecture
 The system follows a **3-layer architecture**:
@@ -63,7 +57,6 @@ The system follows a **3-layer architecture**:
 3. **Database Layer**
    - Stores students, lecturers, classes, and attendance records  
 
----
 
 ##  Database Entities
 - Lecturer  
@@ -71,7 +64,6 @@ The system follows a **3-layer architecture**:
 - Class  
 - Attendance  
 
----
 
 ##  Technologies Used
 - **Backend:** Python (Flask MVC)  
@@ -80,7 +72,6 @@ The system follows a **3-layer architecture**:
 - **Testing:** pytest, pytest-flask  
 - **Browser Testing:** Microsoft Edge  
 
----
 
 ##  Software Development Model
 This project uses the **Scrum (Agile) model**:
@@ -88,7 +79,6 @@ This project uses the **Scrum (Agile) model**:
 - Continuous improvement after each sprint
 - Strong teamwork and communication
 
----
 
 ##  Testing
 - 53 automated test cases executed  
@@ -102,7 +92,6 @@ This project uses the **Scrum (Agile) model**:
 - Integration Testing  
 - System Testing  
 
----
 
 ##  Functional Requirements
 - Lecturer login  
@@ -113,7 +102,6 @@ This project uses the **Scrum (Agile) model**:
 - Store attendance data  
 - Search student records  
 
----
 
 ##  Non-Functional Requirements
 - Usability  
@@ -123,7 +111,6 @@ This project uses the **Scrum (Agile) model**:
 - Maintainability  
 - Availability  
 
----
 
 ##  How to Run the Project
 
